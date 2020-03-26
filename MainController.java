@@ -24,6 +24,7 @@ public class MainController {
 	@FXML private CheckBox funding, tristate, exchange;
 	@FXML private Button add, remove, print;
 	
+	
 	boolean selectedInstate = false;
 	boolean selectedOutstate = false;
 	boolean selectedInternational = false;
@@ -39,7 +40,8 @@ public class MainController {
 				selectedInstate = true;
 				tristate.setDisable(true);
 				exchange.setDisable(true);
-				
+				funds.setDisable(true);
+				funds.setText("0");
 			}
 
 			else if(outstate.isSelected()) {
@@ -65,6 +67,7 @@ public class MainController {
     	selectedExchange = false;
 		if(funding.isSelected()) {
 			funds.setDisable(false);
+			funds.setText("");
 		}
 		if(funding.isSelected() == false) {
 			funds.setDisable(true);
@@ -81,6 +84,10 @@ public class MainController {
 	 * reset the view such as buttons and etc.
 	 */
     public void initialize() {
+    	result.setEditable(false);
+    	result.setMouseTransparent(true);
+    	result.setFocusTraversable(false);
+    	
         instate.setDisable(false);
         outstate.setDisable(false);
         international.setDisable(false);
@@ -111,25 +118,32 @@ public class MainController {
     	}
     	return true;
     }
+
     
     /**
-     * Check if first and last name are valid
-     * Display text if they are not 
+     * Check if the first name is valid
+     * Display text if it is not
      */
-    public boolean validName() {
-    	//Check if first and last name are NOT NULL
+    public boolean validFirstName() {
     	if(fname.getText() == null || fname.getText().isEmpty()) {
     		result.setText("Please enter a first name.");
     		return false;
     	}
-    	if(lname.getText() == null || lname.getText().isEmpty()) {
-    		result.setText("Please enter a last name.");
-    		return false;
-    	}
-
-    	//Check if first and last name are VALID
     	if(!isAlphanumeric(fname.getText())) {
     		result.setText("Invalid first name for student.");
+    		return false;
+    	}
+    	return true;
+    }
+    
+    
+    /**
+     * Check if the last name is valid
+     * Display text if it is not
+     */
+    public boolean validLastName() {
+    	if(lname.getText() == null || lname.getText().isEmpty()) {
+    		result.setText("Please enter a last name.");
     		return false;
     	}
     	if(!isAlphanumeric(lname.getText())) {
@@ -170,7 +184,7 @@ public class MainController {
 			result.setText("Integer expected for funding amount.");
 			return false;
 		}
-		if (fundingAmount <= 0) {
+		if (fundingAmount < 0) {
 			result.setText("Positive funding amount expected.");
 			return false;
 		}
@@ -181,7 +195,10 @@ public class MainController {
 	 * add different types of student to the StudentList.
 	 */
 	public void addStudent(ActionEvent event) {
-		if(!validName()) {
+		if(!validFirstName()) {
+			return;
+		}
+		if(!validLastName()) {
 			return;
 		}
 		if(!validCredit()) {
@@ -190,11 +207,13 @@ public class MainController {
 		
 		//Case 1: QUESTION what is the purpose of the checkbox for "Funding"?
 		//I think if checkbox is not selected we don't look at the funding amount???
-		if(selectedInstate == true || instate.isSelected()) {
-			//funding.isSelected();
-			if(!validFunding()) {
-				return;
+		if(selectedInstate == true) {
+			if(funding.isSelected()) {
+				if(!validFunding()) {
+					return;
+				}	
 			}
+			
 			Instate inStudent = new Instate(fname.getText(), lname.getText(), Integer.parseInt(credit.getText()), Integer.parseInt(funds.getText()));
 			if(classOf2020.contains(inStudent)) {
 	        	result.setText("Student is already in the list.");	          
@@ -205,7 +224,7 @@ public class MainController {
 			}
 		}
 		
-		if(selectedOutstate == true) {
+		else if(selectedOutstate == true) {
 			Outstate outStudent = new Outstate(fname.getText(), lname.getText(), Integer.parseInt(credit.getText()), selectedTristate);
 			if(classOf2020.contains(outStudent)) {
 	        	result.setText("Student is already in the list.");
@@ -216,7 +235,7 @@ public class MainController {
 			}
 		}
 		
-		if(selectedInternational == true) {
+		else if(selectedInternational == true) {
 			International intStudent = new International(fname.getText(), lname.getText(), Integer.parseInt(credit.getText()), selectedExchange);
 			if(classOf2020.contains(intStudent)) {
 	        	result.setText("Student is already in the list.");	          
@@ -240,7 +259,6 @@ public class MainController {
 		credit.setText(null);
 		funds.setText(null);	
 		
-		classOf2020.print();
 	}
 	
 	
@@ -248,19 +266,24 @@ public class MainController {
 	 * Remove a Student s from the studentList
 	 */
 	public void remove(ActionEvent event) {
+		if(!validFirstName()) {
+			return;
+		}
+		if(!validLastName()) {
+			return;
+		}
 		
 		if(classOf2020.getNumStudents() == 0) {
 			result.setText("Empty list of Students.");
+			return;
 		}
-		
-		else if(selectedInstate == true) {		
-			Instate student = new Instate(fname.getText(), lname.getText(), 0, 0);
-			if(classOf2020.contains(student)) {
-				classOf2020.remove(student);	
-				result.setText("Student removed");
-			}
+
+		Instate student = new Instate(fname.getText(), lname.getText(), 0, 0);
+		if(classOf2020.contains(student)) {
+			classOf2020.remove(student);	
+			result.setText("Student removed");
 		}
-		
+
 		else {
         	result.setText("Student not found");
 		}
@@ -283,6 +306,5 @@ public class MainController {
             result.setText("There are zero students.");
         }
         result.setText(classOf2020.GUItoString());
-        System.out.println(classOf2020.GUItoString());
 	}
 }
