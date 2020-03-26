@@ -27,7 +27,7 @@
                <children>
                   <TextField fx:id="fname" prefHeight="21.0" prefWidth="263.0" promptText="First Name" />
                   <TextField fx:id="lname" prefHeight="23.0" prefWidth="263.0" promptText="Last Name" />
-                  <TextField fx:id="credit" prefHeight="30.0" prefWidth="430.0" promptText="Number of Credits" />
+                  <TextField fx:id="credit" onAction="#checkCredit" onInputMethodTextChanged="#checkCredit" prefHeight="30.0" prefWidth="430.0" promptText="Number of Credits" />
                </children>
             </VBox>
             <VBox alignment="TOP_RIGHT" layoutX="47.0" layoutY="19.0" prefHeight="173.0" prefWidth="148.0" spacing="35.0">
