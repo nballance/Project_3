@@ -38,7 +38,10 @@ public class MainController {
 
 		if (instate.isSelected()) {
 			if(!validFirstName() || !validLastName() || !validCredit()) {
+				initialize();
 				instate.setSelected(false);
+				international.setSelected(false);
+				outstate.setSelected(false);
 				return;
 			}
 			initialize();
@@ -57,6 +60,9 @@ public class MainController {
 
 		else if (outstate.isSelected()) {
 			if(!validFirstName() || !validLastName() || !validCredit()) {
+				initialize();
+				instate.setSelected(false);
+				international.setSelected(false);
 				outstate.setSelected(false);
 				return;
 			}
@@ -72,7 +78,10 @@ public class MainController {
 
 		} else if (international.isSelected()) {
 			if(!validFirstName() || !validLastName() || !validCredit()) {
+				initialize();
+				instate.setSelected(false);
 				international.setSelected(false);
+				outstate.setSelected(false);
 				return;
 			}
 			initialize();
@@ -91,7 +100,16 @@ public class MainController {
 	}
 	
 	public void checkCredit(ActionEvent event) {
-        if(selectedInstate){
+        if(!validCredit()) {
+        	initialize();
+        	
+        	instate.setSelected(false);
+        	outstate.setSelected(false);
+        	international.setSelected(false);
+        	
+        	return;
+        }
+		if(selectedInstate){
             if(Integer.parseInt(credit.getText()) < FULL_TIME_MIN_CREDITS) {
                 funding.setDisable(true);
                 funding.setSelected(false);
@@ -107,6 +125,7 @@ public class MainController {
             	result.setText("Please enter credits greater than or equal to 9.");
             	selectedInternational = false;
             	international.setSelected(false);
+            	exchange.setSelected(false);
             }
         }
 
@@ -154,10 +173,14 @@ public class MainController {
 		tristate.setDisable(true);
 		exchange.setDisable(true);
 
+		funds.setText("");
+		
 		tristate.setSelected(false);
 		exchange.setSelected(false);
 		funding.setSelected(false);
 
+
+		
 		selectedInstate = false;
 		selectedOutstate = false;
 		selectedInternational = false;
@@ -359,3 +382,4 @@ public class MainController {
 		result.setText(classOf2020.GUItoString());
 	}
 }
+
