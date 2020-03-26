@@ -1,10 +1,8 @@
 package application;
 
 import javafx.fxml.FXML;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
-import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 
 public class MainController {
