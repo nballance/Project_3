@@ -1,5 +1,11 @@
 package application;
 
+/**
+ * Class to take in user input for the JavaFX application (GUI TuitionManager)
+ * 
+ * @author Nathan Ballance, Weihong Chen
+ */
+
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
@@ -19,7 +25,7 @@ public class MainController {
 
 	final int FULL_TIME_MIN_CREDITS = 12;
 	final int INTERNATIONAL_MIN_CREDITS = 9;
-	
+
 	boolean selectedInstate = false;
 	boolean selectedOutstate = false;
 	boolean selectedInternational = false;
@@ -29,13 +35,14 @@ public class MainController {
 	StudentList classOf2020 = new StudentList();
 
 	/**
-	 * Enables and disables check boxes and buttons based on mouse event 
-	 * @param event, mouse event when a radio button is selected 
+	 * Enables and disables check boxes and buttons based on mouse event.
+	 * 
+	 * @param event, mouse event when a radio button is selected.
 	 */
 	public void filter(MouseEvent event) {
 
 		if (instate.isSelected()) {
-			if(!validFirstName() || !validLastName() || !validCredit()) {
+			if (!validFirstName() || !validLastName() || !validCredit()) {
 				initialize();
 				instate.setSelected(false);
 				international.setSelected(false);
@@ -44,20 +51,20 @@ public class MainController {
 			}
 			initialize();
 			selectedInstate = true;
-			
-			if(Integer.parseInt(credit.getText()) >= FULL_TIME_MIN_CREDITS) {
+
+			if (Integer.parseInt(credit.getText()) >= FULL_TIME_MIN_CREDITS) {
 				funding.setDisable(false);
 			}
-			
+
 			tristate.setDisable(true);
 			exchange.setDisable(true);
-			
+
 			funds.setDisable(true);
 			funds.setText("0");
 		}
 
 		else if (outstate.isSelected()) {
-			if(!validFirstName() || !validLastName() || !validCredit()) {
+			if (!validFirstName() || !validLastName() || !validCredit()) {
 				initialize();
 				instate.setSelected(false);
 				international.setSelected(false);
@@ -75,7 +82,7 @@ public class MainController {
 			exchange.setDisable(true);
 
 		} else if (international.isSelected()) {
-			if(!validFirstName() || !validLastName() || !validCredit()) {
+			if (!validFirstName() || !validLastName() || !validCredit()) {
 				initialize();
 				instate.setSelected(false);
 				international.setSelected(false);
@@ -87,7 +94,7 @@ public class MainController {
 			funding.setDisable(true);
 			funds.setDisable(true);
 			tristate.setDisable(true);
-			if(Integer.parseInt(credit.getText()) < INTERNATIONAL_MIN_CREDITS) {
+			if (Integer.parseInt(credit.getText()) < INTERNATIONAL_MIN_CREDITS) {
 				result.setText("International student must have 9 or more credits.");
 				international.setSelected(false);
 				return;
@@ -96,42 +103,48 @@ public class MainController {
 			exchange.setDisable(false);
 		}
 	}
-	
-	public void checkCredit(ActionEvent event) {
-        if(!validCredit()) {
-        	initialize();
-        	
-        	instate.setSelected(false);
-        	outstate.setSelected(false);
-        	international.setSelected(false);
-        	
-        	return;
-        }
-		if(selectedInstate){
-            if(Integer.parseInt(credit.getText()) < FULL_TIME_MIN_CREDITS) {
-                funding.setDisable(true);
-                funding.setSelected(false);
-                funds.setDisable(true);
-                funds.setText("");
-            }
-            else {
-                funding.setDisable(false);
-                funds.setDisable(false);
-            }
-        }else if(selectedInternational) {
-            if(Integer.parseInt(credit.getText()) < INTERNATIONAL_MIN_CREDITS) {
-            	result.setText("Please enter credits greater than or equal to 9.");
-            	selectedInternational = false;
-            	international.setSelected(false);
-            	exchange.setSelected(false);
-            }
-        }
-
-    }
 
 	/**
+	 * Check if an entered credit amount is valid. If invalid reset buttons.
 	 * 
-	 * @param event
+	 * @param event, when the user clicks the "enter"/"return" key in the credit
+	 *               text field
+	 */
+	public void checkCredit(ActionEvent event) {
+		if (!validCredit()) {
+			initialize();
+			instate.setSelected(false);
+			outstate.setSelected(false);
+			international.setSelected(false);
+			return;
+		}
+		if (selectedInstate) {
+			if (Integer.parseInt(credit.getText()) < FULL_TIME_MIN_CREDITS) {
+				funding.setDisable(true);
+				funding.setSelected(false);
+				funds.setDisable(true);
+				funds.setText("0");
+			} else {
+				funding.setDisable(false);
+				funds.setDisable(false);
+				funds.setText("");
+			}
+		} else if (selectedInternational) {
+			if (Integer.parseInt(credit.getText()) < INTERNATIONAL_MIN_CREDITS) {
+				result.setText("Please enter credits greater than or equal to 9.");
+				selectedInternational = false;
+				international.setSelected(false);
+				exchange.setSelected(false);
+				exchange.setDisable(true);
+			}
+		}
+	}
+
+	/**
+	 * Check if one of the check box buttons are selected and adjust values
+	 * accordingly
+	 * 
+	 * @param event, When the user selects a check box
 	 */
 	public void checkEvent(ActionEvent event) {
 		selectedTristate = false;
@@ -153,12 +166,9 @@ public class MainController {
 	}
 
 	/**
-	 * reset the view such as buttons and etc.
+	 * Reset buttons and check boxes with their values.
 	 */
 	public void initialize() {
-		
-		
-		
 		result.setEditable(false);
 		result.setMouseTransparent(true);
 		result.setFocusTraversable(false);
@@ -172,21 +182,21 @@ public class MainController {
 		exchange.setDisable(true);
 
 		funds.setText("");
-		
+
 		tristate.setSelected(false);
 		exchange.setSelected(false);
 		funding.setSelected(false);
 
-
-		
 		selectedInstate = false;
 		selectedOutstate = false;
 		selectedInternational = false;
-
 	}
 
 	/**
-	 * Check if a given string is alphanumeric
+	 * Checks if a given string consists of letters only.
+	 * 
+	 * @param name, the string to have its characters checked.
+	 * @return true, if the given string consists of letters only.
 	 */
 	public boolean isAlphanumeric(String name) {
 		char[] chars = name.toCharArray();
@@ -198,8 +208,10 @@ public class MainController {
 		return true;
 	}
 
+
 	/**
-	 * Check if the first name is valid Display text if it is not
+	 * Check if the entered first name is valid. Display text if it is not valid.
+	 * @return boolean, true if the first name is valid and false otherwise.
 	 */
 	public boolean validFirstName() {
 		if (fname.getText() == null || fname.getText().isEmpty()) {
@@ -214,7 +226,8 @@ public class MainController {
 	}
 
 	/**
-	 * Check if the last name is valid Display text if it is not
+	 * Check if the entered last name is valid. Display text if it is not valid.
+	 * @return boolean, true if the last name is valid and false otherwise.
 	 */
 	public boolean validLastName() {
 		if (lname.getText() == null || lname.getText().isEmpty()) {
@@ -228,8 +241,10 @@ public class MainController {
 		return true;
 	}
 
+
 	/**
-	 * Check if credit amount is valid Display text if it is not
+	 * Check if the entered credit amount is valid. Display text if it is not valid.
+	 * @return boolean, true if the entered credit value is valid and false otherwise. 
 	 */
 	public boolean validCredit() {
 		int enteredCredit = 0;
@@ -247,7 +262,9 @@ public class MainController {
 	}
 
 	/**
-	 * Check if funding amount is valid Display text if it is not
+	 * Check if the entered funding amount is valid. Display text if it is not
+	 * valid.
+	 * @return boolean, true if the funding amount is valid and false otherwise.
 	 */
 	public boolean validFunding() {
 		int fundingAmount = 0;
@@ -265,7 +282,11 @@ public class MainController {
 	}
 
 	/**
-	 * add different types of student to the StudentList.
+	 * Check if there is a valid first name, last name, and student type and add the
+	 * student to the student list. If there are any errors in the entered
+	 * information display an error message.
+	 * 
+	 * @param event, when the user selects the "Add" button.
 	 */
 	public void addStudent(ActionEvent event) {
 		if (!validFirstName()) {
@@ -278,8 +299,6 @@ public class MainController {
 			return;
 		}
 
-		// Case 1: QUESTION what is the purpose of the checkbox for "Funding"?
-		// I think if checkbox is not selected we don't look at the funding amount???
 		if (selectedInstate == true) {
 			if (funding.isSelected()) {
 				if (!validFunding()) {
@@ -299,7 +318,7 @@ public class MainController {
 
 		else if (selectedOutstate == true) {
 			Outstate outStudent = new Outstate(fname.getText(), lname.getText(), Integer.parseInt(credit.getText()),
-					selectedTristate);
+					tristate.isSelected());
 			if (classOf2020.contains(outStudent)) {
 				result.setText("Student is already in the list.");
 			} else {
@@ -310,7 +329,7 @@ public class MainController {
 
 		else if (selectedInternational == true) {
 			International intStudent = new International(fname.getText(), lname.getText(),
-					Integer.parseInt(credit.getText()), selectedExchange);
+					Integer.parseInt(credit.getText()), exchange.isSelected());
 			if (classOf2020.contains(intStudent)) {
 				result.setText("Student is already in the list.");
 			} else {
@@ -331,11 +350,14 @@ public class MainController {
 		lname.setText(null);
 		credit.setText(null);
 		funds.setText(null);
-
 	}
 
 	/**
-	 * Remove a Student s from the studentList
+	 * Check if there is a valid first and last name and remove the student from the
+	 * student list. If there are any errors in the entered information or an empty
+	 * student list an appropriate error message.
+	 * 
+	 * @param event, when the user selects the "Remove" button.
 	 */
 	public void remove(ActionEvent event) {
 		if (!validFirstName()) {
@@ -344,7 +366,7 @@ public class MainController {
 		if (!validLastName()) {
 			return;
 		}
-
+		
 		if (classOf2020.getNumStudents() == 0) {
 			result.setText("Empty list of Students.");
 			return;
@@ -369,9 +391,12 @@ public class MainController {
 		lname.setText(null);
 		credit.setText(null);
 		funds.setText(null);
-
 	}
 
+	/**
+	 * Display the student list. If the list is empty display an appropriate
+	 * message.
+	 */
 	public void print() {
 		int num = classOf2020.getNumStudents();
 		if (num == 0) {
@@ -380,4 +405,3 @@ public class MainController {
 		result.setText(classOf2020.GUItoString());
 	}
 }
-

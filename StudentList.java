@@ -19,13 +19,13 @@ public class StudentList {
 		numStudents = 0;
 	}
 
-	/**
-	 * Search the student list for a given Student object, s
-	 * 
-	 * @return boolean true if the Student s is contained in the StudentList, false
-	 *         otherwise
-	 */
-	public boolean contains(Student s) {
+	 /**
+	  * Search the student list for a given Student object, s
+	  * @param s, the Student to check if they are contained in the StudentList
+	  * @return boolean, true if the Student s is contained in the StudentList, false
+	  * otherwise
+	  */
+	 public boolean contains(Student s) {
 		for (int i = 0; i < numStudents; i++) {
 			if (studentList[i].compareTo(s) == 0) {
 				return true;
